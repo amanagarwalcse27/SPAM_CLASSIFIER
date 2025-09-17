@@ -1,36 +1,60 @@
-import nltk
-import os
-from nltk.corpus import stopwords
-import string
-from nltk.stem.porter import PorterStemmer
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+import pickle
 
-# Set NLTK data path for Streamlit Cloud
-nltk.data.path.append(os.path.join(os.path.dirname(__file__), 'nltk_data'))
+# Load your saved model and vectorizer
+with open("spam_model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-ps = PorterStemmer()
+with open("tfidf.pkl", "rb") as f:
+    tfidf = pickle.load(f)
+
+# -----------------------------
+# Text preprocessing functions
+# -----------------------------
 
 def to_lower(text):
     return text.lower()
 
 def tokenize(text):
-    return nltk.word_tokenize(text)
+    # Simple regex-based tokenizer, no NLTK needed
+    text = to_lower(text)
+    tokens = re.findall(r'\b\w+\b', text)
+    return tokens
 
 def remove_non_alphnum(tokens):
-    return [i for i in tokens if i.isalnum()]
+    return [token for token in tokens if token.isalnum()]
 
-def removes_stop_punc(tokens):
-    return [i for i in tokens if i not in stopwords.words('english') and i not in string.punctuation]
+# Simple stopwords list (replace if you have your own)
+STOPWORDS = set([
+    'the','a','an','and','or','is','it','to','for','in','of','on','at','by','this','that'
+])
 
+def remove_stopwords(tokens):
+    return [token for token in tokens if token not in STOPWORDS]
+
+# Optional: simple stemming (can be skipped or implement your own)
 def stem_words(tokens):
-    return [ps.stem(i) for i in tokens]
+    # Very basic: remove common suffixes
+    suffixes = ['ing', 'ly', 'ed', 's', 'es']
+    stemmed = []
+    for token in tokens:
+        for suf in suffixes:
+            if token.endswith(suf) and len(token) > len(suf)+2:
+                token = token[:-len(suf)]
+        stemmed.append(token)
+    return stemmed
 
+# Full preprocessing pipeline
 def full_pipeline(text):
-    text = to_lower(text)
     tokens = tokenize(text)
     tokens = remove_non_alphnum(tokens)
-    tokens = removes_stop_punc(tokens)
+    tokens = remove_stopwords(tokens)
     tokens = stem_words(tokens)
     return " ".join(tokens)
+
+
 
 
 
