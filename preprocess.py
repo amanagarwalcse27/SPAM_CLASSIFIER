@@ -4,7 +4,7 @@ from sklearn.naive_bayes import MultinomialNB
 import pickle
 
 # Load your saved model and vectorizer
-with open("spam_model.pkl", "rb") as f:
+with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
 with open("tfidf.pkl", "rb") as f:
@@ -53,6 +53,7 @@ def full_pipeline(text):
     tokens = remove_stopwords(tokens)
     tokens = stem_words(tokens)
     return " ".join(tokens)
+
 
 
 
