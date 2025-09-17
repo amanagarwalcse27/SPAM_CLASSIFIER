@@ -3,9 +3,9 @@ from nltk.corpus import stopwords
 import string
 from nltk.stem.porter import PorterStemmer
 
-# Download NLTK data for deployment
-nltk.download('punkt')
-nltk.download('stopwords')
+# Download NLTK data silently
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
 ps = PorterStemmer()
 
@@ -31,4 +31,6 @@ def full_pipeline(text):
     tokens = removes_stop_punc(tokens)
     tokens = stem_words(tokens)
     return " ".join(tokens)
+
+
 
