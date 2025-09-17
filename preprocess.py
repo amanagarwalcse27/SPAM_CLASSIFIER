@@ -1,11 +1,11 @@
 import nltk
+import os
 from nltk.corpus import stopwords
 import string
 from nltk.stem.porter import PorterStemmer
 
-# Download required NLTK data silently
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+# Set NLTK data path for Streamlit Cloud
+nltk.data.path.append(os.path.join(os.path.dirname(__file__), 'nltk_data'))
 
 ps = PorterStemmer()
 
@@ -31,4 +31,6 @@ def full_pipeline(text):
     tokens = removes_stop_punc(tokens)
     tokens = stem_words(tokens)
     return " ".join(tokens)
+
+
 
