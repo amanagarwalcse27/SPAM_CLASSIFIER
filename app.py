@@ -3,7 +3,6 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from  preprocess import full_pipeline   # apna preprocessing function import kar liya
 import nltk 
-nltk.download('punkt')
 
 #Load trained Model and Vectorizer
 model = pickle.load(open('model.pkl','rb'))
@@ -35,6 +34,7 @@ if st.button("🔍 Predict"):
             st.header("SPAM")
         else:
             st.header("NOT SPAM")
+
 
 
 
